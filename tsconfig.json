@@ -25,7 +25,8 @@
     "noPropertyAccessFromIndexSignature": false,
 
     "paths": {
-      "@classes/*": ["./classes/*"]
+      "@classes/*": ["./classes/*"],
+      "@root/*": ["./*"]
     }
   }
 }

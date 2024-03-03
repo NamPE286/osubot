@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import channels from "../../channels";
 import client from "../../client";
-import type { BanchoChannelMember } from "bancho.js";
+import type { BanchoChannelMember, BanchoLobbyPlayer } from "bancho.js";
 
 export default async (req: Request, res: Response) => {
     if (typeof req.query.players != 'string') {
@@ -33,7 +33,28 @@ export default async (req: Request, res: Response) => {
 
     res.send()
 
-    channel.on('JOIN', (member: BanchoChannelMember) => {
-        console.log(`${member.user.username} joined ${channel.lobby.id}`)
+    let playerCount = 0
+
+    channel.lobby.on('playerJoined', (playerJoined: any) => {
+        playerCount++
+        console.log(`${playerJoined.player.user.username} joined lobby ${channel.lobby.id} (${playerCount} player(s))`)
+    })
+
+    channel.lobby.on('playerLeft', (player: BanchoLobbyPlayer) => {
+        playerCount--
+        console.log(`${player.user.username} left lobby ${channel.lobby.id} (${playerCount} player(s))`)
+        
+        if(playerCount == 0) {
+            channels.remove(channel.lobby.id)
+        }
+    })
+
+    channel.lobby.on('allPlayersReady', () => {
+        console.log('All player ready! Starting match')
+        channel.lobby.startMatch()
+    })
+
+    channel.lobby.on('matchFinished', () => {
+        console.log(channel.lobby.scores)
     })
 }
