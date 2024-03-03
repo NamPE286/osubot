@@ -2,6 +2,7 @@ import { BanchoClient } from "bancho.js"
 import express from "express"
 import fs from 'fs'
 import path from 'path'
+import Lobbies from "@classes/Lobbies"
 
 const app = express()
 const client = new BanchoClient({ username: process.env.BANCHO_USERNAME!, password: process.env.BANCHO_PASSWORD! });
@@ -18,7 +19,7 @@ console.log('Connected to Bancho!')
 
 function* walkSync(dir: any): any {
     const files = fs.readdirSync(dir, { withFileTypes: true });
-    
+
     for (const file of files) {
         if (file.isDirectory()) {
             yield* walkSync(path.join(dir, file.name));
