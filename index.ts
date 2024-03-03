@@ -2,7 +2,6 @@ import client from "./client"
 import express from "express"
 import fs from 'fs'
 import path from 'path'
-import Lobbies from "@classes/Lobbies"
 
 const app = express()
 
