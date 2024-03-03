@@ -6,6 +6,22 @@ import channels from "./channels"
 
 const app = express()
 
+app.use((req, res, next) => {
+    console.log(req.headers.authorization)
+
+    if(!req.headers.authorization) {
+        res.status(403).send()
+        return
+    }
+
+    if(req.headers.authorization != `Bearer ${process.env.BANCHO_API_KEY}`) {
+        res.status(403).send()
+        return
+    }
+
+    next()
+})
+
 app.get('/', (req, res) => {
     res.send({
         timestamp: Date.now()
