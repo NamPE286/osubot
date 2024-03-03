@@ -1,7 +1,8 @@
-import client from "./client"
 import express from "express"
 import fs from 'fs'
 import path from 'path'
+import client from "./client"
+import channels from "./channels"
 
 const app = express()
 
@@ -9,6 +10,15 @@ app.get('/', (req, res) => {
     res.send({
         timestamp: Date.now()
     })
+})
+
+process.on('SIGINT', async () => {
+    console.log('Shutting down...')
+    console.log('Clearing all lobby...')
+    channels.clear()
+    console.log('Cleared all lobby')
+
+    process.exit()
 })
 
 function* walkSync(dir: any): any {

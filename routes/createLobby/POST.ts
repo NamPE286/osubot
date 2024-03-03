@@ -2,7 +2,6 @@ import type { Request, Response } from "express";
 import channels from "../../channels";
 import client from "../../client";
 import type { BanchoChannelMember } from "bancho.js";
-import { BanchoMessage, BanchoUser, ChannelMessage } from 'bancho.js'
 
 export default async (req: Request, res: Response) => {
     if (typeof req.query.players != 'string') {
@@ -20,13 +19,16 @@ export default async (req: Request, res: Response) => {
         return
     }
 
+    console.log(players)
+
     const channel = await client.createLobby('1v1', true)
 
     channels.add(channel)
+    console.log(`Created new lobby with id ${channel.lobby.id}`)
 
-    for (const username in players) {
-        const player: BanchoUser = new BanchoUser(client, username)
-        player.sendMessage(`osump://${channel.lobby.id}`)
+    for (const username of players) {
+        channel.lobby.invitePlayer(username)
+        console.log(`Invited ${username} to lobby ${channel.lobby.id}`)
     }
 
     res.send()
