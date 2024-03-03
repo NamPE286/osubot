@@ -7,8 +7,6 @@ import channels from "./channels"
 const app = express()
 
 app.use((req, res, next) => {
-    console.log(req.headers.authorization)
-
     if(!req.headers.authorization) {
         res.status(403).send()
         return
